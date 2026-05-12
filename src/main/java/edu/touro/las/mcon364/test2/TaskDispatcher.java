@@ -68,16 +68,12 @@ public class TaskDispatcher {
      */
     public List<Future<String>> dispatch(List<String> tasks) {
         // TODO 3
-        List<Future<String>> futures = new ArrayList<>();
-        tasks.stream().forEach(task -> {
-            futures.add(
-                    pool.submit(
-                            () -> {
-                                recordResult(task.toUpperCase());
-                                return task.toUpperCase();
-                            }));
-        });
-        return futures;
+        return tasks.stream().map(task -> pool.submit(
+                () -> {
+                    recordResult(task.toUpperCase());
+                    return task.toUpperCase();
+                }))
+                .toList();
     }
 
     public void recordResult(String result) {
